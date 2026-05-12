@@ -83,7 +83,7 @@
                 document.cookie.split('; ').filter(Boolean).map(c => c.split('='))
             );
             if (cookies['login_session']) {
-                window.location.href = '/allmarket.html';
+                window.location.href = 'allmarket.html';
             }
         })();
 
@@ -125,7 +125,7 @@
             // Show success, then redirect to login
             document.getElementById('su-form').style.display = 'none';
             document.getElementById('su-success-box').style.display = 'block';
-            setTimeout(() => { window.location.href = '/login.html'; }, 1500);
+            setTimeout(() => { window.location.href = 'login.html'; }, 1500);
         }
     </script>
 </body>
