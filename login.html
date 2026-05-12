@@ -52,7 +52,7 @@
             );
             if (cookies['login_session']) {
                 // Already logged in — go home
-                window.location.href = '/allmarket.html';
+                window.location.href = 'allmarket.html';
             }
             // No session → stay on login page (signup redirect happens from signup.html)
         })();
@@ -98,7 +98,7 @@
             document.cookie = `login_session=${encodeURIComponent(username)}; expires=${expires}; path=/`;
 
             // Submit / redirect
-            window.location.href = '/allmarket.html';
+            window.location.href = 'allmarket.html';
         }
     </script>
 </body>
