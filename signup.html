@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://unpkg.com/98.css"/>
     <link rel="icon" href="favicon.png">
     <style>
-        /* Tiny extra styles that stay consistent with 98.css */
         .signup-note {
             font-size: 0.85em;
             color: #555;
@@ -27,7 +26,7 @@
         <div class="navbar">
             <h2>Menu</h2>
             <ul>
-                <li><a href="index.html">Home</a></li>
+                <li><a href="allmarket.html">Home</a></li>
                 <li><a href="login.html">Login</a></li>
             </ul>
         </div>
@@ -37,7 +36,8 @@
             <h2>Create an Account</h2>
 
             <div class="signup-container">
-                <!-- Validation error box -->
+
+                <!-- Error box -->
                 <div id="su-error-box" style="display:none; margin-bottom:8px;">
                     <div class="window" style="width:100%; max-width:320px;">
                         <div class="title-bar">
@@ -52,20 +52,20 @@
                 <!-- Success box -->
                 <div id="su-success-box" style="display:none; margin-bottom:8px;">
                     <div class="window" style="width:100%; max-width:320px;">
-                        <div class="title-bar" style="background:#000080;">
+                        <div class="title-bar">
                             <div class="title-bar-text">Account Created</div>
                         </div>
                         <div class="window-body">
-                            <p style="margin:4px 0;">Account created! Redirecting to login…</p>
+                            <p style="margin:4px 0;">Account created! Redirecting…</p>
                         </div>
                     </div>
                 </div>
 
                 <form id="su-form" onsubmit="handleSignup(event)">
-                    <input id="su-username" type="text"     name="username"  placeholder="Choose a username">
-                    <input id="su-email"    type="email"    name="email"     placeholder="Email address">
-                    <input id="su-password" type="password" name="password"  placeholder="Choose a password">
-                    <input id="su-confirm"  type="password" name="confirm"   placeholder="Confirm password">
+                    <input id="su-username" type="text"     name="username" placeholder="Choose a username">
+                    <input id="su-email"    type="email"    name="email"    placeholder="Email address">
+                    <input id="su-password" type="password" name="password" placeholder="Choose a password">
+                    <input id="su-confirm"  type="password" name="confirm"  placeholder="Confirm password">
                     <button type="submit">Sign Up</button>
                 </form>
 
@@ -76,12 +76,20 @@
     </div>
 
     <script>
-        // ── 1. COOKIE CHECK ──────────────────────────────────────────────────────
-        // If a session already exists, no need to sign up — go home.
-        (function checkSessionCookie() {
-            const cookies = Object.fromEntries(
-                document.cookie.split('; ').filter(Boolean).map(c => c.split('='))
+        // Helper: parse all cookies into a plain object
+        function getCookies() {
+            return Object.fromEntries(
+                document.cookie.split('; ').filter(Boolean).map(c => {
+                    const [k, ...v] = c.split('=');
+                    return [k, decodeURIComponent(v.join('='))];
+                })
             );
+        }
+
+        // ── 1. COOKIE CHECK (runs immediately on page load) ──────────────────────
+        // If a session cookie already exists, the account is registered — go to allmarket.
+        (function checkSessionCookie() {
+            const cookies = getCookies();
             if (cookies['login_session']) {
                 window.location.href = 'allmarket.html';
             }
@@ -106,26 +114,23 @@
             const password = document.getElementById('su-password').value;
             const confirm  = document.getElementById('su-confirm').value;
 
-            // Validation rules
-            if (!username) { showError('Username cannot be empty.'); return; }
-            if (username.length < 3) { showError('Username must be at least 3 characters.'); return; }
-
-            if (!email || !email.includes('@')) { showError('Please enter a valid email address.'); return; }
-
-            if (!password) { showError('Password cannot be empty.'); return; }
-            if (password.length < 6) { showError('Password must be at least 6 characters.'); return; }
-
-            if (password !== confirm) { showError('Passwords do not match.'); return; }
+            if (!username)                    { showError('Username cannot be empty.'); return; }
+            if (username.length < 3)          { showError('Username must be at least 3 characters.'); return; }
+            if (!email || !email.includes('@')){ showError('Please enter a valid email address.'); return; }
+            if (!password)                    { showError('Password cannot be empty.'); return; }
+            if (password.length < 6)          { showError('Password must be at least 6 characters.'); return; }
+            if (password !== confirm)          { showError('Passwords do not match.'); return; }
 
             // ── NOTE: NOT SAFE — example only ───────────────────────────────────
-            // Set the login_session cookie (expires in 1 day)
+            // Store "username:password" in the cookie so login.html can verify it.
             const expires = new Date(Date.now() + 86400 * 1000).toUTCString();
-            document.cookie = `login_session=${encodeURIComponent(username)}; expires=${expires}; path=/`;
+            const value   = encodeURIComponent(username + ':' + password);
+            document.cookie = `login_session=${value}; expires=${expires}; path=/`;
 
-            // Show success, then redirect to login
+            // Show success then redirect to allmarket
             document.getElementById('su-form').style.display = 'none';
             document.getElementById('su-success-box').style.display = 'block';
-            setTimeout(() => { window.location.href = 'login.html'; }, 1500);
+            setTimeout(() => { window.location.href = 'allmarket.html'; }, 1500);
         }
     </script>
 </body>

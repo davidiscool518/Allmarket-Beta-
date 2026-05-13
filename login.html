@@ -13,15 +13,15 @@
         <div class="navbar">
             <h2>Menu</h2>
             <ul>
-                <li><a href="index.html">Home</a></li>
+                <li><a href="allmarket.html">Home</a></li>
                 <li><a href="login.html">Login</a></li>
-                <li><a href="signup.html">Signup</a></li>
             </ul>
         </div>
 
         <div class="content">
             <h1 class="am-title" id="am-title">AllMarket</h1>
             <div class="login-container">
+
                 <!-- Validation error box (98.css style) -->
                 <div id="am-error-box" style="display:none; margin-bottom:8px;">
                     <div class="window" style="width:100%; max-width:320px;">
@@ -35,30 +35,39 @@
                 </div>
 
                 <form id="am-user-form" onsubmit="handleLogin(event)">
-                    <input id="am-username-input" type="text" name="username" placeholder="Username">
+                    <input id="am-username-input" type="text"     name="username" placeholder="Username">
                     <input id="am-password-input" type="password" name="password" placeholder="Password">
                     <button id="am-submit-button" type="submit">Submit</button>
                 </form>
             </div>
+            <hr>
         </div>
     </div>
 
     <script>
-        // ── 1. COOKIE CHECK ──────────────────────────────────────────────────────
-        // On page load, if a login_session cookie already exists, skip to index.
-        // If it does NOT exist, redirect to signup so the user can register first.
-        (function checkSessionCookie() {
-            const cookies = Object.fromEntries(
-                document.cookie.split('; ').filter(Boolean).map(c => c.split('='))
+        // Helper: parse all cookies into a plain object
+        function getCookies() {
+            return Object.fromEntries(
+                document.cookie.split('; ').filter(Boolean).map(c => {
+                    const [k, ...v] = c.split('=');
+                    return [k, decodeURIComponent(v.join('='))];
+                })
             );
-            if (cookies['login_session']) {
-                // Already logged in — go home
+        }
+
+        // ── 1. COOKIE CHECK (runs immediately on page load) ──────────────────────
+        // No cookie  → no account registered yet, send to signup
+        // Has cookie → already logged in, skip straight to allmarket
+        (function checkSessionCookie() {
+            const cookies = getCookies();
+            if (!cookies['login_session']) {
+                window.location.href = 'signup.html';
+            } else {
                 window.location.href = 'allmarket.html';
             }
-            // No session → stay on login page (signup redirect happens from signup.html)
         })();
 
-        // ── 2. INPUT VALIDATION ──────────────────────────────────────────────────
+        // ── 2. INPUT VALIDATION + ACCOUNT CHECK ──────────────────────────────────
         function showError(msg) {
             document.getElementById('am-error-msg').textContent = msg;
             document.getElementById('am-error-box').style.display = 'block';
@@ -75,30 +84,35 @@
             const username = document.getElementById('am-username-input').value.trim();
             const password = document.getElementById('am-password-input').value;
 
-            // Validation rules
-            if (!username) {
-                showError('Username cannot be empty.');
-                return;
-            }
-            if (username.length < 3) {
-                showError('Username must be at least 3 characters.');
-                return;
-            }
-            if (!password) {
-                showError('Password cannot be empty.');
-                return;
-            }
-            if (password.length < 6) {
-                showError('Password must be at least 6 characters.');
+            // Basic input validation
+            if (!username) { showError('Username cannot be empty.'); return; }
+            if (username.length < 3) { showError('Username must be at least 3 characters.'); return; }
+            if (!password) { showError('Password cannot be empty.'); return; }
+            if (password.length < 6) { showError('Password must be at least 6 characters.'); return; }
+
+            // ── Cookie account check ─────────────────────────────────────────────
+            // NOTE: NOT SAFE — example only.
+            // Cookie stores "username:password" written at signup.
+            const cookies = getCookies();
+            const session = cookies['login_session'];
+
+            if (!session) {
+                window.location.href = 'signup.html';
                 return;
             }
 
-            // ── NOTE: NOT SAFE — example only ───────────────────────────────────
-            // Set a login_session cookie (expires in 1 day)
-            const expires = new Date(Date.now() + 86400 * 1000).toUTCString();
-            document.cookie = `login_session=${encodeURIComponent(username)}; expires=${expires}; path=/`;
+            const [storedUser, storedPass] = session.split(':');
 
-            // Submit / redirect
+            if (username !== storedUser) {
+                showError('That account does not exist here. Only the registered account can log in.');
+                return;
+            }
+            if (password !== storedPass) {
+                showError('Incorrect password.');
+                return;
+            }
+
+            // Credentials match — go to allmarket
             window.location.href = 'allmarket.html';
         }
     </script>
