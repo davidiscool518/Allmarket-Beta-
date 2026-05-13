@@ -110,6 +110,82 @@ body {
     transform: translateY(1px);
 }
 
+.card {
+    width: 100%;
+    position: relative;
+    padding: 28px;
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow:
+        0 24px 70px rgba(0, 0, 0, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    overflow: hidden;
+    margin: 22px 0;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.18), transparent 28%);
+    pointer-events: none;
+    opacity: 0.9;
+}
+
+.skemophic-card {
+    background: rgba(8, 20, 42, 0.92);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow:
+        0 28px 80px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.friguero-card {
+    background: rgba(210, 230, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.22);
+    box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.card h1,
+.card h2,
+.card p,
+.card a,
+.card label {
+    position: relative;
+    z-index: 1;
+}
+
+.card h1,
+.card h2 {
+    color: rgba(255, 255, 255, 0.96);
+}
+
+.friguero-card h1,
+.friguero-card h2 {
+    color: rgba(25, 40, 80, 0.98);
+}
+
+.card p,
+.card label {
+    color: rgba(255, 255, 255, 0.84);
+}
+
+.friguero-card p,
+.friguero-card label {
+    color: rgba(20, 36, 70, 0.9);
+}
+
+.card button,
+.card input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
 /* ---- PHOTO FRAME ---- */
 img {
     width: 300px;

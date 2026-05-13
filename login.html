@@ -20,25 +20,27 @@
         </div>
 
         <div class="content">
-            <h1 class="am-title" id="am-title">AllMarket</h1>
-            <div class="login-container">
-                <!-- Validation error box (98.css style) -->
-                <div id="am-error-box" style="display:none; margin-bottom:8px;">
-                    <div class="window" style="width:100%; max-width:320px;">
-                        <div class="title-bar">
-                            <div class="title-bar-text">Error</div>
-                        </div>
-                        <div class="window-body">
-                            <p id="am-error-msg" style="margin:4px 0;"></p>
+            <div class="card skemophic-card">
+                <h1 class="am-title" id="am-title">AllMarket</h1>
+                <div class="login-container">
+                    <!-- Validation error box (98.css style) -->
+                    <div id="am-error-box" style="display:none; margin-bottom:8px;">
+                        <div class="window" style="width:100%; max-width:320px;">
+                            <div class="title-bar">
+                                <div class="title-bar-text">Error</div>
+                            </div>
+                            <div class="window-body">
+                                <p id="am-error-msg" style="margin:4px 0;"></p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <form id="am-user-form" onsubmit="handleLogin(event)">
-                    <input id="am-username-input" type="text" name="username" placeholder="Username">
-                    <input id="am-password-input" type="password" name="password" placeholder="Password">
-                    <button id="am-submit-button" type="submit">Submit</button>
-                </form>
+                    <form id="am-user-form" onsubmit="handleLogin(event)">
+                        <input id="am-username-input" type="text" name="username" placeholder="Username">
+                        <input id="am-password-input" type="password" name="password" placeholder="Password">
+                        <button id="am-submit-button" type="submit">Submit</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
